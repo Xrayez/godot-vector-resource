@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/vector_resource/vector_resource.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+value = Vector3( -32, -32, 0 )
+unit_value = Vector3( -0.707107, -0.707107, 0 )
+snapped = true
+grid_step = 16.0
+max_length = 64.0
+editor_show_normalized = true
