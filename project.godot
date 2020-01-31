@@ -27,7 +27,6 @@ _global_script_class_icons={
 [application]
 
 config/name="Vector Resource Plugin Demo"
-config/icon="res://icon.png"
 
 [editor_plugins]
 
