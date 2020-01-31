@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource( 1 )
-value = Vector3( -32, -32, 0 )
+value = Vector3( -16, -16, 0 )
 unit_value = Vector3( -0.707107, -0.707107, 0 )
 snapped = true
 grid_step = 16.0

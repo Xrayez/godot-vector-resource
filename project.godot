@@ -9,18 +9,12 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Control",
-"class": "VectorEditor",
-"language": "GDScript",
-"path": "res://addons/vector_resource/editor/vector_plane_editor.gd"
-}, {
 "base": "Resource",
 "class": "VectorResource",
 "language": "GDScript",
 "path": "res://addons/vector_resource/vector_resource.gd"
 } ]
 _global_script_class_icons={
-"VectorEditor": "",
 "VectorResource": ""
 }
 

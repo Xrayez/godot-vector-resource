@@ -1,4 +1,4 @@
-class_name VectorEditor tool extends Control
+tool extends Control
 
 var edited_vector: VectorResource
 
