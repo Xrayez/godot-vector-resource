@@ -21,6 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Vector Resource Plugin Demo"
+run/main_scene="res://test/test.tscn"
 
 [editor_plugins]
 
