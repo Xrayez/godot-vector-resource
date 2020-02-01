@@ -12,40 +12,14 @@ var vector_width = 0.1
 var vector = Vector3()
 var view_vector = Vector3()
 
-var grid_step = Vector3(16, 16, 16)
-var snapped = true
-var max_length = 64.0
-var normalized_view = false
-
 var _origin_transform = Transform2D()
 var _mouse_pos = Vector2()
 var _clicking = false
 var _dragging = false
-var _handle_size = 8.0
 
 
 func get_plane_grid_step():
-	var gs = Vector2()
-	match plane:
-		VectorPlane.XY:
-			gs = Vector2(grid_step.x, grid_step.y)
-		VectorPlane.XZ:
-			gs = Vector2(grid_step.x, grid_step.z)
-		VectorPlane.YZ:
-			gs = Vector2(grid_step.y, grid_step.z)
-	return gs
-
-
-func get_view_vector():
-	var vec = Vector2()
-	match plane:
-		VectorPlane.XY:
-			vec = Vector2(view_vector.x, view_vector.y)
-		VectorPlane.XZ:
-			vec = Vector2(view_vector.x, view_vector.z)
-		VectorPlane.YZ:
-			vec = Vector2(view_vector.z, view_vector.y) # reverse so that Y matches XY
-	return vec
+	return Vector2(edited_vector.grid_step, edited_vector.grid_step)
 
 
 func get_plane_vector():
@@ -86,6 +60,70 @@ func set_plane_vector_components(u, v):
 			vector.z = u
 
 
+func get_w_color():
+	var wc: Color
+	match plane:
+		VectorPlane.XY:
+			wc = get_color("axis_z_color", "Editor")
+		VectorPlane.XZ:
+			wc = get_color("axis_y_color", "Editor")
+		VectorPlane.YZ:
+			wc = get_color("axis_x_color", "Editor")
+	return wc
+
+
+func get_w_offset(): # z but per plane
+	var ofs = 0.0
+	match plane:
+		VectorPlane.XY:
+			ofs = -vector.z / edited_vector.max_length
+		VectorPlane.XZ:
+			ofs = vector.y / edited_vector.max_length
+		VectorPlane.YZ:
+			ofs = vector.x / edited_vector.max_length
+	ofs = max(0, 1.0 - ofs)
+	return ofs
+
+
+func set_w_component(w): # z but per plane
+	match plane:
+		VectorPlane.XY:
+			vector.z = w
+		VectorPlane.XZ:
+			vector.y = w
+		VectorPlane.YZ:
+			vector.x = w
+
+
+func get_vector_origin():
+	return rect_size / 2.0
+
+
+func get_w_component(): # z but per plane
+	match plane:
+		VectorPlane.XY:
+			return vector.z
+		VectorPlane.XZ:
+			return vector.y
+		VectorPlane.YZ:
+			return vector.x
+
+
+func get_view_coordinates(p_world_pos):
+	var center = get_vector_origin()
+	_origin_transform.origin = center
+
+	var coord = _origin_transform.xform_inv(p_world_pos)
+	coord = (coord / rect_size * 2.0).clamped(1.0)
+
+	return coord
+
+
+func get_vector_coordinates(p_view_pos):
+	var coord = (p_view_pos * edited_vector.max_length).clamped(edited_vector.max_length)
+	return coord
+
+
 func draw_plane_axes(p_center: Vector2):
 	var xc = get_color("axis_x_color", "Editor")
 	var yc = get_color("axis_y_color", "Editor")
@@ -110,51 +148,6 @@ func draw_plane_axes(p_center: Vector2):
 	draw_circle(p_center, 3, get_w_color()) # z-depth hint
 
 
-func get_w_color():
-	var wc: Color
-	match plane:
-		VectorPlane.XY:
-			wc = get_color("axis_z_color", "Editor")
-		VectorPlane.XZ:
-			wc = get_color("axis_y_color", "Editor")
-		VectorPlane.YZ:
-			wc = get_color("axis_x_color", "Editor")
-	return wc
-
-
-func get_w_offset(): # z but per plane
-	var ofs = 0.0
-	match plane:
-		VectorPlane.XY:
-			ofs = -vector.z / max_length
-		VectorPlane.XZ:
-			ofs = vector.y / max_length
-		VectorPlane.YZ:
-			ofs = vector.x / max_length
-	ofs = max(0, 1.0 - ofs)
-	return ofs
-
-
-func set_w_component(w): # z but per plane
-	match plane:
-		VectorPlane.XY:
-			vector.z = w
-		VectorPlane.XZ:
-			vector.y = w
-		VectorPlane.YZ:
-			vector.x = w
-
-
-func get_w_component(): # z but per plane
-	match plane:
-		VectorPlane.XY:
-			return vector.z
-		VectorPlane.XZ:
-			return vector.y
-		VectorPlane.YZ:
-			return vector.x
-
-
 func _draw():
 	if not is_instance_valid(edited_vector):
 		return
@@ -163,9 +156,9 @@ func _draw():
 	_origin_transform.origin = center
 
 	# Draw grid
-	var gs = get_plane_grid_step() * (get_vector_origin() / max_length)
+	var gs = get_plane_grid_step() * (get_vector_origin() / edited_vector.max_length)
 
-	if snapped and gs.x > 0.0 and gs.y > 0.0:
+	if edited_vector.snapped and gs.x > 0.0 and gs.y > 0.0:
 		var gc = (get_vector_origin() / gs).ceil()
 		var ofs = (gc * gs) - get_vector_origin()
 		var pos = gs - ofs
@@ -194,6 +187,10 @@ func _draw():
 	draw_set_transform(center, 0.0, Vector2.ONE)
 
 	var vec = (get_plane_vector() / edited_vector.max_length) * get_vector_origin()
+
+	if edited_vector.snapped:
+		vec = vec.snapped(gs)
+
 	if _dragging:
 		var c = Color.white
 		c.a = 0.07
@@ -201,7 +198,7 @@ func _draw():
 
 	if edited_vector.normalized:
 		var c = Color.white
-		c.a = 0.14
+		c.a = 0.2
 		draw_circle(vec, gs.length() / 8, c)
 		vec = vec.normalized() * get_vector_origin()
 
@@ -231,19 +228,11 @@ func _draw():
 	draw_polygon(arrow_points, PoolColorArray([end_color, end_color, end_color]), PoolVector2Array([]), null, null, true)
 
 
-func get_vector_origin():
-	return rect_size / 2.0
-
-
 func _process(delta):
 	if not is_instance_valid(edited_vector):
 		return
 
 	vector = edited_vector.value
-	snapped = edited_vector.snapped
-	max_length = edited_vector.max_length
-	var gs = edited_vector.grid_step
-	grid_step = Vector3(gs, gs, gs)
 
 	if _dragging:
 		var coord = get_view_coordinates(_mouse_pos)
@@ -251,28 +240,10 @@ func _process(delta):
 		var uv = get_vector_coordinates(coord)
 		set_plane_vector_components(uv.x, uv.y)
 
-	if snapped:
-		vector = vector.snapped(grid_step)
-
 	if _dragging or _clicking:
 		edited_vector.value = vector
 
 	update()
-
-
-func get_view_coordinates(p_world_pos):
-	var center = get_vector_origin()
-	_origin_transform.origin = center
-
-	var coord = _origin_transform.xform_inv(p_world_pos)
-	coord = (coord / rect_size * 2.0).clamped(1.0)
-
-	return coord
-
-
-func get_vector_coordinates(p_view_pos):
-	var coord = (p_view_pos * max_length).clamped(max_length)
-	return coord
 
 
 func _gui_input(event):
