@@ -179,7 +179,7 @@ func _draw():
 			draw_line(Vector2(0, pos.y), Vector2(rect_size.x, pos.y), grid_color)
 			pos.y += gs.y
 
-	if edited_vector.editor_show_normalized:
+	if edited_vector.normalized:
 		var c = Color.white
 		c.a = 0.02
 		draw_circle(center, min(rect_size.x, rect_size.y) / 2.0, c)
@@ -199,7 +199,7 @@ func _draw():
 		c.a = 0.07
 		draw_circle(vec, gs.length() / 4, c)
 
-	if edited_vector.editor_show_normalized:
+	if edited_vector.normalized:
 		var c = Color.white
 		c.a = 0.14
 		draw_circle(vec, gs.length() / 8, c)

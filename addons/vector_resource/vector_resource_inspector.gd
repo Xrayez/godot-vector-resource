@@ -12,7 +12,5 @@ func parse_property(object, type, path, hint, hint_text, usage):
 			editor.edited_vector = object
 			add_custom_control(editor)
 			return false
-		"editor_show_normalized":
-			return true
 
 	return false

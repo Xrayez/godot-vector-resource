@@ -15,7 +15,7 @@ __meta__ = {
 [node name="body" type="VBoxContainer" parent="."]
 margin_left = 32.0
 margin_right = 288.0
-margin_bottom = 324.0
+margin_bottom = 280.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -63,22 +63,6 @@ rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 3 )
-
-[node name="view_buttons" type="HBoxContainer" parent="body"]
-margin_top = 284.0
-margin_right = 256.0
-margin_bottom = 324.0
-size_flags_horizontal = 3
-
-[node name="unit" type="CheckButton" parent="body/view_buttons"]
-margin_right = 256.0
-margin_bottom = 40.0
-focus_mode = 0
-size_flags_horizontal = 3
-enabled_focus_mode = 0
-text = "Normalized View"
-flat = true
 [connection signal="pressed" from="body/plane_buttons/xy" to="." method="_on_xy_pressed"]
 [connection signal="pressed" from="body/plane_buttons/xz" to="." method="_on_xz_pressed"]
 [connection signal="pressed" from="body/plane_buttons/yz" to="." method="_on_yz_pressed"]
-[connection signal="toggled" from="body/view_buttons/unit" to="." method="_on_unit_toggled"]

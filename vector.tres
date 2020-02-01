@@ -8,5 +8,5 @@ value = Vector3( -16, -16, 0 )
 unit_value = Vector3( -0.707107, -0.707107, 0 )
 snapped = true
 grid_step = 16.0
+normalized = true
 max_length = 64.0
-editor_show_normalized = true

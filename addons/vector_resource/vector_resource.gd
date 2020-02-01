@@ -3,12 +3,10 @@ class_name VectorResource tool extends Resource
 # Public/editor properties
 export(Vector3) var value = Vector3() setget set_value
 export(Vector3) var unit_value = Vector3() setget set_unit_value
-
 export(bool) var snapped = true setget set_snapped
 export(float) var grid_step = 16.0 setget set_grid_step
+export(bool) var normalized = false setget set_normalized
 export(float) var max_length = 64.0  setget set_max_length
-
-export(bool) var editor_show_normalized = false setget set_editor_show_normalized
 
 # Convenience properties
 func _get(p_property):
@@ -69,6 +67,6 @@ func set_grid_step(p_grid_step):
 	emit_signal("changed")
 
 
-func set_editor_show_normalized(p_show):
-	editor_show_normalized = p_show
+func set_normalized(p_normalized):
+	normalized = p_normalized
 	emit_signal("changed")
