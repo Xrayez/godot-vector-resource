@@ -14,7 +14,6 @@ var view_vector = Vector3()
 
 var _origin_transform = Transform2D()
 var _mouse_pos = Vector2()
-var _clicking = false
 var _dragging = false
 
 
@@ -239,8 +238,6 @@ func _process(delta):
 		set_view_vector_components(coord.x, coord.y)
 		var uv = get_vector_coordinates(coord)
 		set_plane_vector_components(uv.x, uv.y)
-
-	if _dragging or _clicking:
 		edited_vector.value = vector
 
 	update()
