@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource( 1 )
-value = Vector3( -16, -16, 0 )
-unit_value = Vector3( -0.707107, -0.707107, 0 )
+value = Vector3( -16, -16, 48 )
+unit_value = Vector3( -0.301511, -0.301511, 0.904534 )
 snapped = true
 grid_step = 16.0
 normalized = true

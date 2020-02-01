@@ -5,9 +5,11 @@ class_name VectorResource tool extends Resource
 # The following support vector swizzling to some extent.
 # Properties represent hardcoded permutations of vector components.
 #
+# Ordered by most commonly used for performance reasons.
+#
 func _get(p_property):
 	v = unit_value if normalized else value
-	# Ordered by most commonly used for perfomance reasons.
+
 	if p_property == "xy":
 		return Vector2(v.x, v.y)
 	elif p_property == "xyz":
@@ -38,6 +40,40 @@ func _get(p_property):
 		return Vector3(v.y, v.z, v.x)
 	elif p_property == "zyx":
 		return Vector3(v.z, v.y, v.x)
+
+
+func _set(p_property, p_value):
+	if p_property == "xy":
+		set_value(Vector3(p_value.x, p_value.y, value.z))
+	elif p_property == "xyz":
+		set_value(Vector3(p_value.x, p_value.y, p_value.z))
+	elif p_property == "x":
+		set_value(Vector3(p_value.x, value.y, value.z))
+	elif p_property == "y":
+		set_value(Vector3(value.x, p_value.y, value.z))
+	elif p_property == "z":
+		set_value(Vector3(value.x, value.y, p_value.z))
+	elif p_property == "yx":
+		set_value(Vector3(p_value.y, p_value.x, value.z))
+	elif p_property == "xz":
+		set_value(Vector3(p_value.x, value.y, p_value.y))
+	elif p_property == "zx":
+		set_value(Vector3(p_value.y, value.y, p_value.x))
+	elif p_property == "zy":
+		set_value(Vector3(value.x, p_value.y, p_value.z))
+	elif p_property == "yz":
+		set_value(Vector3(value.x, p_value.x, p_value.y))
+	elif p_property == "yxz":
+		set_value(Vector3(p_value.y, p_value.x, value.z))
+	elif p_property == "zxy":
+		set_value(Vector3(p_value.z, p_value.x, value.y))
+	elif p_property == "xzy":
+		set_value(Vector3(p_value.x, p_value.z, value.y))
+	elif p_property == "yzx":
+		set_value(Vector3(p_value.y, p_value.z, value.x))
+	elif p_property == "zyx":
+		set_value(Vector3(p_value.z, p_value.y, value.x))
+	return true
 
 #===============================================================================
 # Protected
