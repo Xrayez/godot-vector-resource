@@ -4,9 +4,8 @@ export(Resource) var vector = preload("res://vector.tres")
 
 
 func _ready():
-	debug_print()
 	vector.connect("changed", self, "debug_print")
-
+	debug_print()
 	test()
 
 
