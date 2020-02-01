@@ -60,7 +60,7 @@ func _set(p_property, p_value):
 	elif p_property == "zx":
 		set_value(Vector3(p_value.y, value.y, p_value.x))
 	elif p_property == "zy":
-		set_value(Vector3(value.x, p_value.y, p_value.z))
+		set_value(Vector3(value.x, p_value.y, p_value.x))
 	elif p_property == "yz":
 		set_value(Vector3(value.x, p_value.x, p_value.y))
 	elif p_property == "yxz":
@@ -107,7 +107,7 @@ func _init():
 func update():
 	if snapped:
 		value = value.snapped(Vector3(grid_step, grid_step, grid_step))
-#	value = value.clamped(max_length) Vector3 doesn't support clamp...
+#	value = value.clamped(max_length) # Vector3 doesn't support clamp...
 	unit_value = value.normalized()
 
 
@@ -117,7 +117,7 @@ func set_value(p_value):
 
 
 func set_unit_value(p_value):
-	pass # restrict, handled in set_value
+	pass # restrict, should be handled in `update` method
 
 
 func set_max_length(p_max_length):
